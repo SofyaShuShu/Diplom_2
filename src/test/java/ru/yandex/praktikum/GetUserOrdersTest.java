@@ -1,6 +1,7 @@
 package ru.yandex.praktikum;
 
 import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
@@ -18,26 +19,26 @@ public class GetUserOrdersTest {
     @Step("Setup base URL and create new user")
     public void setUp() {
         Utils.setUp();
-        user = new User("frodo@frodo.com", "frodotest", "Frodo");
+        user = UserGenerator.generateUser();
         UserUtils.userCreate(user);
         accessToken = UserUtils.getAccessToken(user);
     }
 
-    @Step("Method checks whether an authorized user can retrieve a list of orders.")
+    @DisplayName("Method checks whether an authorized user can retrieve a list of orders.")
     @Test
-    public void testGetOrdersAuthenticatedUser() {
+    public void testGetOrdersAuthenticatedUserTest() {
         Response response = UserUtils.getUserOrder(accessToken);
         response.then().statusCode(SC_OK);
         response.then().body("success", equalTo(true));
     }
 
-    @Step("Method checks that an unauthorized user cannot get the order list.")
+    @DisplayName("Method checks that an unauthorized user cannot get the order list.")
     @Test
-    public void testGetOrdersUnauthenticatedUser() {
+    public void testGetOrdersUnauthenticatedUserTest() {
         Response response = UserUtils.getUserOrder("");
         response.then().statusCode(SC_UNAUTHORIZED);
         response.then().body("success", equalTo(false));
-        response.then().body("message", equalTo("You should be authorised"));
+        response.then().body("message", equalTo(ErrorsMessages.UNAUTHORISED_ERROR_MESSAGE));
     }
 
     @After

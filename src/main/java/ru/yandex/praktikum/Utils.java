@@ -6,7 +6,7 @@ import io.restassured.RestAssured;
 public class Utils {
     @Step("Method for setup base URL")
     public static void setUp(){
-        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
+        RestAssured.baseURI = Urls.MAIN_PAGE_PATH;
     }
 
 }

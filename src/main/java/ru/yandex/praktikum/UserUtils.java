@@ -13,7 +13,7 @@ public class UserUtils {
                         .header("Content-type", "application/json")
                         .body(user)
                         .when()
-                        .post("/api/auth/register");
+                        .post(Urls.REGISTER_USER_PATH);
         return response;
     }
 
@@ -23,7 +23,7 @@ public class UserUtils {
                 given()
                .header("Content-Type", "application/json")
                .body(user)
-               .post("api/auth/login")
+               .post(Urls.LOGIN_USER_PATH)
                .then()
                .extract()
                .path("accessToken");
@@ -38,7 +38,7 @@ public class UserUtils {
                     given()
                             .header("Authorization", accessToken)
                             .when()
-                            .delete("/api/auth/user");
+                            .delete(Urls.USER_INFO_PATH);
         }
     }
 
@@ -49,7 +49,7 @@ public class UserUtils {
                 .header("Content-type", "application/json")
                 .body(user)
                 .when()
-                .post("/api/auth/login");
+                .post(Urls.LOGIN_USER_PATH);
         return response;
     }
 
@@ -61,7 +61,7 @@ public class UserUtils {
                         .header("Content-Type", "application/json")
                         .body(user)
                         .when()
-                        .patch("/api/auth/user");
+                        .patch(Urls.USER_INFO_PATH);
         return response;
     }
 
@@ -70,7 +70,7 @@ public class UserUtils {
     Response response = given()
             .header("Authorization", accessToken)
             .when()
-            .get("/api/orders");
+            .get(Urls.ORDER_PATH);
         return response;
     }
 }

@@ -1,7 +1,9 @@
 package ru.yandex.praktikum;
 
 import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
+import net.datafaker.Faker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,43 +14,44 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 public class UserLoginTest {
     private User user;
+    private Faker faker;
 
     @Before
     @Step("Setup base URL and create new user")
     public void setUp() {
         Utils.setUp();
-        user = new User("frodo@frodo.com", "frodotest", "Frodo");
+        user = UserGenerator.generateUser();
         UserUtils.userCreate(user);
+        faker = new Faker();
     }
 
     @Test
-    @Step("Login user with valid date")
-    public void loginUserUserWithValidDate(){
+    @DisplayName("Login user with valid date")
+    public void loginUserUserWithValidDateTest(){
         Response response = UserUtils.userLogin(user);
         response.then().statusCode(SC_OK);
         response.then().body("success", equalTo(true));
     }
 
     @Test
-    @Step("Login impossible without valid email")
-    public void loginUserWithoutCorrectEmail(){
-        User userWithoutEmail = new User("frodo@frodo.java", user.getPassword(), user.getName());
-
-        Response response = UserUtils.userLogin(userWithoutEmail);
+    @DisplayName("Login impossible without valid email")
+    public void loginUserWithoutCorrectEmailTest(){
+        String newEmail = faker.internet().emailAddress();
+        User userWithoutCorrectEmail = new User(newEmail, user.getPassword(), user.getName());
+        Response response = UserUtils.userLogin(userWithoutCorrectEmail);
         response.then().statusCode(SC_UNAUTHORIZED);
-        String expectedMessage = "email or password are incorrect";
-        response.then().body("message", equalTo(expectedMessage));
+        response.then().body("message", equalTo(ErrorsMessages.INCORRECT_EMAIL_OR_PASSWORD_MESSAGE));
     }
 
     @Test
-    @Step("Login impossible without valid password")
-    public void loginUserWithoutCorrectPassword(){
-        User userWithoutEmail = new User(user.getEmail(), "password", user.getName());
+    @DisplayName("Login impossible without valid password")
+    public void loginUserWithoutCorrectPasswordTest(){
+        String newPassword = faker.internet().password();
+        User userWithoutCorrectPassword = new User(user.getEmail(), newPassword, user.getName());
 
-        Response response = UserUtils.userLogin(userWithoutEmail);
+        Response response = UserUtils.userLogin(userWithoutCorrectPassword);
         response.then().statusCode(SC_UNAUTHORIZED);
-        String expectedMessage = "email or password are incorrect";
-        response.then().body("message", equalTo(expectedMessage));
+        response.then().body("message", equalTo(ErrorsMessages.INCORRECT_EMAIL_OR_PASSWORD_MESSAGE));
     }
 
 

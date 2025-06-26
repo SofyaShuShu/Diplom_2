@@ -1,6 +1,7 @@
 package ru.yandex.praktikum;
 
 import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
@@ -9,7 +10,7 @@ import org.junit.Test;
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class UserCreateWithoutRequiredFields {
+public class UserCreateWithoutRequiredFieldsTest {
     private User user;
 
     @Before
@@ -19,36 +20,33 @@ public class UserCreateWithoutRequiredFields {
     }
 
     @Test
-    @Step("Create user without email")
-    public void createUserWithoutEmail(){
-        user = new User(null, "frodotest", "Frodo");
+    @DisplayName("Create user without email")
+    public void createUserWithoutEmailTest(){
+        user = UserGenerator.generateUserWithoutEmail();
 
         Response response = UserUtils.userCreate(user);
         response.then().statusCode(SC_FORBIDDEN);
-        String expectedMessage = "Email, password and name are required fields";
-        response.then().body("message", equalTo(expectedMessage));
+        response.then().body("message", equalTo(ErrorsMessages.REQUIRED_FIELDS_MESSAGE));
     }
 
     @Test
-    @Step("Create user without password")
-    public void createUserWithoutPassword(){
-        user = new User("frodo@frodo.com", null, "Frodo");
+    @DisplayName("Create user without password")
+    public void createUserWithoutPasswordTest(){
+        user = UserGenerator.generateUserWithoutPassword();
 
         Response response = UserUtils.userCreate(user);
         response.then().statusCode(SC_FORBIDDEN);
-        String expectedMessage = "Email, password and name are required fields";
-        response.then().body("message", equalTo(expectedMessage));
+        response.then().body("message", equalTo(ErrorsMessages.REQUIRED_FIELDS_MESSAGE));
     }
 
     @Test
-    @Step("Create user without name")
-    public void createUserWithoutName(){
-        user = new User("frodo@frodo.com", "frodotest", null);
+    @DisplayName("Create user without name")
+    public void createUserWithoutNameTest(){
+        user = UserGenerator.generateUserWithoutName();
 
         Response response = UserUtils.userCreate(user);
         response.then().statusCode(SC_FORBIDDEN);
-        String expectedMessage = "Email, password and name are required fields";
-        response.then().body("message", equalTo(expectedMessage));
+        response.then().body("message", equalTo(ErrorsMessages.REQUIRED_FIELDS_MESSAGE));
     }
 
     @After

@@ -21,7 +21,7 @@ public class OrderUtils {
                         .header("Authorization", accessToken)
                         .body(order)
                         .when()
-                        .post("/api/orders");
+                        .post(Urls.ORDER_PATH);
         return response;
     }
 
@@ -35,7 +35,7 @@ public class OrderUtils {
                         .header("Authorization", accessToken)
                         .body(order)
                         .when()
-                        .post("/api/orders");
+                        .post(Urls.ORDER_PATH);
         return response;
     }
 
@@ -43,7 +43,7 @@ public class OrderUtils {
     public static String getRandomIngredientId() {
         Response response = given()
                 .when()
-                .get("api/ingredients");
+                .get(Urls.INGREDIENTS_PATH);
         List<Map<String, Object>> ingredients = response.jsonPath().getList("data");
         Random random = new Random();
         int randomIndex = random.nextInt(ingredients.size());

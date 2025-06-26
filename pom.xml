@@ -19,6 +19,13 @@
     </properties>
 
     <dependencies>
+        <!-- подключение DataFaker -->
+        <dependency>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
         <!-- модуль взаимодействия Allure и Junit -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
